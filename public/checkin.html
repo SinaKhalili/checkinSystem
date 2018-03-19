@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no"/>
+    <meta charset="utf-8">
+
+    <title>Check-in</title>
+
+    <link rel="stylesheet" href="./css/style.css"/>
+    <link rel="stylesheet" href="./css/materialize.min.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+    <h1>Welcome, student. Please check in: </h1>
+  <!--  Dont sql inject me or xss me pls-->
+    <ul></ul>
+
+    <div class="row">
+    <form class="col s12" method="post">
+      <div class="row">
+        <div class="input-field col s6">
+          <b>Check in class:</b>
+          <input id="class" name="class" type="text" class="validate" required>
+        </div>
+        <div class="input-field col s6">
+          <b>User ID (student number):</b>
+          <input id="userId" name="userId" type="text" class="validate" required>
+          <!-- <label for="userId">User ID</label> -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <b>Name:</b>
+          <input id="Name" name="name" type="text" class="validate" required>
+        </div>
+      </div>
+      <button class="waves-effect waves-light btn">Instant check-in</button>
+    </form>
+  </div>
+</div>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/script.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script></body>
+</html>

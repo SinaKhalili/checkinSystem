@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no"/>
+    <meta charset="utf-8">
+
+    <title>Welcome</title>
+
+    <link rel="stylesheet" href="./css/style.css"/>
+    <link rel="stylesheet" href="./css/materialize.min.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+    <h1>Welcome, admin. Please login: </h1>
+  <!--  Dont sql inject me or xss me pls-->
+    <ul></ul>
+
+    <section>
+      <form method="post" action= 'adminHome'>
+        <div class="input-field">
+          <i class="material-icons prefix">account_circle</i>
+          <input placeholder="username" type="text" id="username" name="username" for = 'username'  required /> <br />
+          <i class="material-icons prefix">lock</i>
+          <input placeholder="password" type="password" id="password" name="password" required /> <br />
+        </div>
+          <input type="submit" class="waves-effect waves-light btn" value="Login">
+          <a href= "checkin.html" class="waves-effect waves-light btn"><i class="material-icons left">query_builder</i>Check in now! </a>
+      </form>
+    </section>
+</div>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/script.js"></script>
+
+</body>
+</html>
