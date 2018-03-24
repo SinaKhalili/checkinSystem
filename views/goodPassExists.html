@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="./css/style.css"/>
   <link rel="stylesheet" href="./css/materialize.min.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <title>Welcome</title>
+  <title>Class Exists</title>
 </head>
 <body>
 <div class="container">
@@ -18,15 +18,15 @@
           <div class="card blue-grey darken-1">
             <div class="card-content white-text">
               <span class="card-title">Admin Landing</span>
-              <form action="openclass" method="post">
-                Which class do you want to open? Type below: 
-                <input type="text" name="checkinID" value=""/>
-                <input type="submit" name="" class="waves-effect waves-light btn" value="Check-in Begin"/>
-            </div>
+              <form action="insertClass" method="post">
+                Which class do you want to open?
+                <input type="text" name="className" id="checkinIdThing"/>
+                <input type="submit" class="waves-effect waves-light btn" name="" value="submit">
+              </form>
+              </div>
             <div class="card-action">
-              <a href="#">View History</a>
+              <button type="button" class="waves-effect waves-light btn" name="button" onclick="viewHistory()">View History</button>
             </div>
-          </form>
           </div>
         </div>
       </div>

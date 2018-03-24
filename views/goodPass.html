@@ -18,12 +18,14 @@
           <div class="card blue-grey darken-1">
             <div class="card-content white-text">
               <span class="card-title">Admin Landing</span>
+              <form action="insertClass" method="post">
                 Which class do you want to open?
-                <input type="text" name="checkinID" id="checkinIdThing"/>
+                <input type="text" name="className" id="checkinIdThing"/>
+                <input type="submit" class="waves-effect waves-light btn" name="" value="submit">
+              </form>
               </div>
             <div class="card-action">
-              <button type="button" name="button" onclick="openFloodgates()">View History</button>
-              <button type="button" name="button" onclick="viewHistory()">View History</button>
+              <button type="button" class="waves-effect waves-light btn" name="button" onclick="viewHistory()">View History</button>
             </div>
           </div>
         </div>

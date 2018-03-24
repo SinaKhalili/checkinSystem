@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./css/style.css"/>
+  <link rel="stylesheet" href="./css/materialize.min.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script type="text/javascript" src="./js/script1.js">
+
+  </script>
+  <title>Welcome</title>
+</head>
+<body>
+<div class="container">
+  <h3>Here are your open classes, including the one you just added: </h3>
+  <div id = "response"></div>
+</div>
+<form id="delete" style="visibility: hidden;"class="" action="deleteThisClass"  method="post">
+  <input style="visibility: hidden;"type="text" name="ref" value="ref" id="changeMeDelete">
+</form>
+<form id="close" style="visibility: hidden;"class="" action="closeThisClass" method="post">
+  <input style="visibility: hidden;"type="text" name="ref" value="ref" id="changeMeClose">
+</form>
+<form id="view" style="visibility: hidden;"class="" action="viewClassHistory" method="post">
+  <input style="visibility: hidden;"type="text" name="ref" value="ref" id="changeMeClose">
+</form>
+</body>
+</html>
