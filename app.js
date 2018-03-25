@@ -6,7 +6,9 @@ var mongo = require('mongodb');
 var MongoClient = require('mongodb').MongoClient;
 // var mongojs = require('mongojs');
 //var db = mongojs('khalili:JCJ36eaU@cmpt218.csil.sfu.ca:27017/cmpt218_khalili?authSource=admin',['checkins']);
-var url = "mongodb://khalili:bill202@ds113179.mlab.com:13179/vro";
+//var url = "mongodb://khalili:bill202@ds117469.mlab.com:17469/cmpt218_khalili";
+var url = "mongodb://khalili:JCJ36eaU@127.0.0.1:27017/cmpt218_khalili?authSource=admin";
+//var url = "mongodb://khalili:JCJ36eaU@cmpt218.csil.sfu.ca:27017/cmpt218_khalili?authSource=admin";
 //CONNECT PROTOTYPE
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
@@ -14,9 +16,9 @@ MongoClient.connect(url, function(err, db) {
   db.close();
 });
 //COLLECTION PROTOTYPE
-MongoClient.connect(url, function(err, db) {
+/*MongoClient.connect(url, function(err, db) {
   if (err) throw err;
-  var dbo = db.db("vro");
+  var dbo = db.db("cmpt218_khalili");
   dbo.createCollection("checkins", function(err, res) {
     if (err) throw err;
     console.log("Collection initialized...");
@@ -26,7 +28,7 @@ MongoClient.connect(url, function(err, db) {
 //INSERTION PROTOYPE
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
-  var dbo = db.db("vro");
+  var dbo = db.db("cmpt218_khalili");
   var myobj = { name: "This is a", address: "test boi" };
   dbo.collection("customers").insertOne(myobj, function(err, res) {
     if (err) throw err;
@@ -37,7 +39,7 @@ MongoClient.connect(url, function(err, db) {
 //SEARCHING PROTOTYPE
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
-  var dbo = db.db("vro");
+  var dbo = db.db("cmpt218_khalili");
   dbo.collection("customers").findOne({}, function(err, result) {
     if (err) throw err;
     console.log(result.name);
@@ -47,14 +49,14 @@ MongoClient.connect(url, function(err, db) {
 //SEARCHING MANY PROTOTYPE
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
-  var dbo = db.db("vro");
+  var dbo = db.db("cmpt218_khalili");
   dbo.collection("customers").find({}).toArray(function(err, result) {
     if (err) throw err;
     console.log(result);
     db.close();
   });
-});
-// mongoose.connect("mongodb://khalili:bill202@ds113179.mlab.com:13179/vro");
+});*/
+// mongoose.connect("mongodb://khalili:bill202@ds113179.mlab.com:13179/cmpt218_khalili");
 // var db = mongoose.connection;
 //
 // db.once('open', function(){
@@ -97,12 +99,14 @@ app.use(express.static(path.join(__dirname,'public')));
 app.get('/', function(req,res) {
   res.redirect('/login.html');
 });
-
+app.get('/openclasses', function(req,res){
+	res.sendFile(__dirname + '/views/openClasses.html');
+});
 app.post('/adminHome', function (req,res) {
   var title = 'customers';
   console.log(req.body);
   if(req.body.username === 'admin' && req.body.password === '1234'){
-    res.sendFile(__dirname + '/views/goodPass.html');
+    res.sendfile(__dirname + '/views/goodPass.html');
   }
   else{
     res.sendfile(__dirname + '/views/wrongPass.html');
@@ -111,7 +115,7 @@ app.post('/adminHome', function (req,res) {
 app.get('/getOpenClasses', function (req,res) {
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("vro");
+    var dbo = db.db("cmpt218_khalili");
     dbo.collection("customers").find({inputType:'admin'}).toArray(function(err, result) {
       if (err) throw err;
       res.send(JSON.stringify(result));
@@ -123,7 +127,7 @@ app.post('/closeThisClass', function(req,res){
   console.log("You want me to close " + req.body.ref);
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("vro");
+    var dbo = db.db("cmpt218_khalili");
     var thing = req.body.ref;
     var myquery = { className:thing, isLive:"true", inputType:'admin'};
     var newvalues = { $set: {isLive: "false"} };
@@ -131,7 +135,7 @@ app.post('/closeThisClass', function(req,res){
       if (err) throw err;
       console.log("class now closed");
       db.close();
-      res.sendFile(__dirname + '/views/openClasses.html');
+      res.sendfile(__dirname + '/views/openClasses.html');
     });
   });
 });
@@ -139,14 +143,14 @@ app.post('/deleteThisClass', function (req,res) {
   console.log("You want me to delete "+ req.body.ref);
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("vro");
+    var dbo = db.db("cmpt218_khalili");
     var thing = req.body.ref;
     var myquery = { className: thing};
     dbo.collection("customers").deleteOne(myquery, function(err, obj) {
       if (err) throw err;
       console.log("1 document deleted");
       db.close();
-      res.sendFile(__dirname + '/views/openClasses.html');
+      res.sendfile(__dirname + '/views/openClasses.html');
     });
   });
 });
@@ -154,7 +158,7 @@ app.post('/viewThisClass', function (req,res) {
   console.log("You want to see " + req.body.ref);
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("vro");
+    var dbo = db.db("cmpt218_khalili");
     var sinasCoolString = req.body.ref;
     dbo.collection("customers").find({className:sinasCoolString,inputType:"user"}).toArray(function(err, result) {
       if (err) throw err;
@@ -169,7 +173,7 @@ app.post('/viewThisClass', function (req,res) {
 app.post('/checkin', function (req,res) {
     MongoClient.connect(url, function (err,db) {
       if(err) throw err;
-      var dbo = db.db("vro");
+      var dbo = db.db("cmpt218_khalili");
       var swagostringo = req.body.class;
       dbo.collection("customers").findOne({className:swagostringo, isLive:"true"}, function(err, result){
         if(err) throw err;
@@ -197,18 +201,19 @@ app.post('/checkin', function (req,res) {
               date:date
             };
             if (err) throw err;
-            var dbo = db.db("vro");
+            var dbo = db.db("cmpt218_khalili");
             dbo.collection("customers").insertOne(studentIn, function(err, res) {
               if (err) throw err;
               console.log("Student " + req.body.name + " inserted");
               db.close();
-              res.sendFile(__dirname + '/views/checkinGood.html');
+              
             });
+	res.redirect('/checkinGood.html');
           });
         }
         else{
           console.log("CAN'T CHECK THAT IN");
-          res.sendFile(__dirname + '/views/checkinBad.html');
+          res.redirect('/checkinBad.html');
         }
       });
     });
@@ -217,7 +222,7 @@ app.post('/insertClass', function (req,res) {
   var exists = false;
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("vro");
+    var dbo = db.db("cmpt218_khalili");
     dbo.collection("customers").findOne({className:req.body.className}, function(err, result) {
       if (err) throw err;
       console.log(result);
@@ -254,21 +259,21 @@ app.post('/insertClass', function (req,res) {
             date:date
           };
           if (err) throw err;
-          var dbo = db.db("vro");
+          var dbo = db.db("cmpt218_khalili");
           dbo.collection("customers").insertOne(classIn, function(err, res) {
             if (err) throw err;
             console.log("Class " + req.body.className + " inserted");
             db.close();
           });
         });
-        res.sendFile(__dirname + '/views/openClasses.html');
+        res.sendfile(__dirname + '/views/openClasses.html');
       }
       else{
-        res.sendFile(__dirname + '/views/goodPassExists.html');
+        res.sendfile(__dirname + '/views/goodPassExists.html');
       }
     });
   });
 });
-app.listen(3000, function(){
+app.listen(17630, function(){
   console.log("Port 3000 seems like a nice port...");
 });
