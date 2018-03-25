@@ -120,7 +120,98 @@ app.get('/getOpenClasses', function (req,res) {
   });
 });
 app.post('/closeThisClass', function(req,res){
-  console.log("You want me to delete " + req.body.ref);
+  console.log("You want me to close " + req.body.ref);
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("vro");
+    var thing = req.body.ref;
+    var myquery = { className:thing, isLive:"true", inputType:'admin'};
+    var newvalues = { $set: {isLive: "false"} };
+    dbo.collection("customers").updateOne(myquery, newvalues, function(err, result) {
+      if (err) throw err;
+      console.log("class now closed");
+      db.close();
+      res.sendFile(__dirname + '/views/openClasses.html');
+    });
+  });
+});
+app.post('/deleteThisClass', function (req,res) {
+  console.log("You want me to delete "+ req.body.ref);
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("vro");
+    var thing = req.body.ref;
+    var myquery = { className: thing};
+    dbo.collection("customers").deleteOne(myquery, function(err, obj) {
+      if (err) throw err;
+      console.log("1 document deleted");
+      db.close();
+      res.sendFile(__dirname + '/views/openClasses.html');
+    });
+  });
+});
+app.post('/viewThisClass', function (req,res) {
+  console.log("You want to see " + req.body.ref);
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("vro");
+    var sinasCoolString = req.body.ref;
+    dbo.collection("customers").find({className:sinasCoolString,inputType:"user"}).toArray(function(err, result) {
+      if (err) throw err;
+      console.log(result);
+      res.send(JSON.stringify(result));
+      db.close();
+
+    });
+  });
+});
+
+app.post('/checkin', function (req,res) {
+    MongoClient.connect(url, function (err,db) {
+      if(err) throw err;
+      var dbo = db.db("vro");
+      var swagostringo = req.body.class;
+      dbo.collection("customers").findOne({className:swagostringo, isLive:"true"}, function(err, result){
+        if(err) throw err;
+        if(result){
+          MongoClient.connect(url, function(err, db) {
+            date = new Date();
+            var month = date.getUTCMonth() + 1;
+            var day = date.getUTCDate();
+            var year = date.getUTCFullYear();
+            var newdate = year + "/" + month + "/" + day;
+            var hours = date.getHours();
+            var mins = date.getMinutes();
+            var ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            mins = mins < 10 ? '0' + mins : mins;
+            var newtime = hours + ":" + mins + " " + ampm;
+            date = newtime;
+            var studentIn = {
+              bname: req.body.name,
+              userId: req.body.userId,
+              className:req.body.class,
+              inputType:'user',
+              isLive:'true',
+              date:date
+            };
+            if (err) throw err;
+            var dbo = db.db("vro");
+            dbo.collection("customers").insertOne(studentIn, function(err, res) {
+              if (err) throw err;
+              console.log("Student " + req.body.name + " inserted");
+              db.close();
+              res.sendFile(__dirname + '/views/checkinGood.html');
+            });
+          });
+        }
+        else{
+          console.log("CAN'T CHECK THAT IN");
+          res.sendFile(__dirname + '/views/checkinBad.html');
+        }
+      });
+    });
 });
 app.post('/insertClass', function (req,res) {
   var exists = false;
@@ -141,12 +232,26 @@ app.post('/insertClass', function (req,res) {
       if(!exists){
         console.log("trying to find...");
         MongoClient.connect(url, function(err, db) {
+          date = new Date();
+          var month = date.getUTCMonth() + 1;
+          var year = date.getUTCFullYear();
+          var day = date.getUTCDate();
+          var newdate = year + "/" + month + "/" + day;
+          var mins = date.getMinutes();
+          var hours = date.getHours();
+          var ampm = hours >= 12 ? 'pm' : 'am';
+          hours = hours % 12;
+          hours = hours ? hours : 12;
+          mins = mins < 10 ? '0' + mins : mins;
+          var newtime = hours + ":" + mins + " " + ampm;
+          date = newtime;
           var classIn = {
             bname: 'admin',
             userId: '42',
             className:req.body.className,
             inputType:'admin',
-            isLive:'true'
+            isLive:'true',
+            date:date
           };
           if (err) throw err;
           var dbo = db.db("vro");
